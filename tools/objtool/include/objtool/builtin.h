@@ -16,6 +16,7 @@ struct opts {
 	bool hack_noinstr;
 	bool hack_skylake;
 	bool ibt;
+	bool l4;
 	bool mcount;
 	bool noabs;
 	bool noinstr;

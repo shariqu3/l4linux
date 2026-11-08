@@ -2,6 +2,12 @@
 include ../scripts/Makefile.include
 include ../scripts/Makefile.arch
 
+ifeq ($(ARCH),l4)
+ifeq ($(L4X_SRCARCH),x86)
+SRCARCH := x86
+endif
+endif
+
 ifeq ($(SRCARCH),x86)
 	BUILD_ORC    := y
 	ARCH_HAS_KLP := y

@@ -1,0 +1,1 @@
+include $(srctree)/arch/x86/entry/vdso/common/Makefile.include

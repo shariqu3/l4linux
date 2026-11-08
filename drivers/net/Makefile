@@ -73,6 +73,9 @@ obj-$(CONFIG_IEEE802154) += ieee802154/
 obj-$(CONFIG_WWAN) += wwan/
 obj-$(CONFIG_MCTP) += mctp/
 
+obj-$(CONFIG_L4_NET_ANKH_DRV)     += l4ankh.o
+obj-$(CONFIG_L4_NET_L4SHM)   += l4shmnet.o
+
 obj-$(CONFIG_VMXNET3) += vmxnet3/
 obj-$(CONFIG_XEN_NETDEV_FRONTEND) += xen-netfront.o
 obj-$(CONFIG_XEN_NETDEV_BACKEND) += xen-netback/

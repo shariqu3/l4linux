@@ -2,7 +2,7 @@
 VERSION = 7
 PATCHLEVEL = 2
 SUBLEVEL = 0
-EXTRAVERSION =
+EXTRAVERSION = -l4
 NAME = Baby Opossum Posse
 
 # *DOCUMENTATION*
@@ -279,6 +279,8 @@ export VPATH := $(srcroot)
 else
 VPATH :=
 endif
+
+include $(srctree)/arch/l4/Makefile.early
 
 # To make sure we do not include .config for any of the *config targets
 # catch them early, and hand them over to scripts/kconfig/Makefile

@@ -1,0 +1,1 @@
+include $(srctree)/arch/$(LINSRCARCH)/include/uapi/asm/Kbuild

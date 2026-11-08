@@ -12,9 +12,17 @@
 #include <linux/export.h>
 #include <linux/ioremap.h>
 
+#ifdef CONFIG_L4
+#define __ARCH_IOREMAP_C_INCLUDED__
+#include "../arch/l4/mm/io.c"
+#endif /* L4 */
+
 void __iomem *generic_ioremap_prot(phys_addr_t phys_addr, size_t size,
 				   pgprot_t prot)
 {
+#ifdef CONFIG_L4
+	return __l4x_ioremap(phys_addr, size, prot);
+#else /* L4 */
 	unsigned long offset, vaddr;
 	phys_addr_t last_addr;
 	struct vm_struct *area;
@@ -46,6 +54,7 @@ void __iomem *generic_ioremap_prot(phys_addr_t phys_addr, size_t size,
 	}
 
 	return (void __iomem *)(vaddr + offset);
+#endif /* L4 */
 }
 
 #ifndef ioremap_prot
@@ -59,10 +68,14 @@ EXPORT_SYMBOL(ioremap_prot);
 
 void generic_iounmap(volatile void __iomem *addr)
 {
+#ifdef CONFIG_L4
+	l4x_iounmap(addr);
+#else /* L4 */
 	void *vaddr = (void *)((unsigned long)addr & PAGE_MASK);
 
 	if (is_ioremap_addr(vaddr))
 		vunmap(vaddr);
+#endif /* L4 */
 }
 
 #ifndef iounmap

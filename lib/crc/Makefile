@@ -12,7 +12,7 @@ obj-$(CONFIG_CRC_ITU_T) += crc-itu-t.o
 obj-$(CONFIG_CRC_T10DIF) += crc-t10dif.o
 crc-t10dif-y := crc-t10dif-main.o
 ifeq ($(CONFIG_CRC_T10DIF_ARCH),y)
-CFLAGS_crc-t10dif-main.o += -I$(src)/$(SRCARCH)
+CFLAGS_crc-t10dif-main.o += -I$(src)/$(L4X_SRCARCH)
 crc-t10dif-$(CONFIG_ARM) += arm/crc-t10dif-core.o
 crc-t10dif-$(CONFIG_ARM64) += arm64/crc-t10dif-core.o
 crc-t10dif-$(CONFIG_PPC) += powerpc/crct10dif-vpmsum_asm.o
@@ -23,7 +23,7 @@ endif
 obj-$(CONFIG_CRC32) += crc32.o
 crc32-y := crc32-main.o
 ifeq ($(CONFIG_CRC32_ARCH),y)
-CFLAGS_crc32-main.o += -I$(src)/$(SRCARCH)
+CFLAGS_crc32-main.o += -I$(src)/$(L4X_SRCARCH)
 crc32-$(CONFIG_ARM) += arm/crc32-core.o
 crc32-$(CONFIG_ARM64) += arm64/crc32-core.o
 crc32-$(CONFIG_PPC) += powerpc/crc32c-vpmsum_asm.o
@@ -37,7 +37,7 @@ endif
 obj-$(CONFIG_CRC64) += crc64.o
 crc64-y := crc64-main.o
 ifeq ($(CONFIG_CRC64_ARCH),y)
-CFLAGS_crc64-main.o += -I$(src)/$(SRCARCH)
+CFLAGS_crc64-main.o += -I$(src)/$(L4X_SRCARCH)
 
 crc64-cflags-$(CONFIG_ARM) += -march=armv8-a -mfpu=crypto-neon-fp-armv8
 crc64-cflags-$(CONFIG_ARM64) += -march=armv8-a+crypto

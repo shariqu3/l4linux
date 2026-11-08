@@ -24,7 +24,7 @@ libcryptoutils-y				:= memneq.o utils.o
 obj-$(CONFIG_CRYPTO_LIB_AES) += libaes.o
 libaes-y := aes.o
 ifeq ($(CONFIG_CRYPTO_LIB_AES_ARCH),y)
-CFLAGS_aes.o += -I$(src)/$(SRCARCH)
+CFLAGS_aes.o += -I$(src)/$(L4X_SRCARCH)
 
 libaes-$(CONFIG_ARM) += arm/aes-cipher-core.o
 libaes-$(CONFIG_ARM64) += arm64/aes-cipher-core.o \
@@ -85,7 +85,7 @@ endif # CONFIG_CRYPTO_LIB_BLAKE2B_ARCH
 # blake2s is used by the /dev/random driver which is always builtin
 obj-y += blake2s.o
 ifeq ($(CONFIG_CRYPTO_LIB_BLAKE2S_ARCH),y)
-CFLAGS_blake2s.o += -I$(src)/$(SRCARCH)
+CFLAGS_blake2s.o += -I$(src)/$(or $(LINSRCARCH),$(SRCARCH))
 obj-$(CONFIG_ARM) += arm/blake2s-core.o
 obj-$(CONFIG_X86) += x86/blake2s-core.o
 endif
@@ -99,7 +99,7 @@ obj-$(CONFIG_CRYPTO_LIB_CHACHA) += libchacha.o
 libchacha-y := chacha.o
 
 ifeq ($(CONFIG_CRYPTO_LIB_CHACHA_ARCH),y)
-CFLAGS_chacha.o += -I$(src)/$(SRCARCH)
+CFLAGS_chacha.o += -I$(src)/$(or $(LINSRCARCH),$(SRCARCH))
 
 ifeq ($(CONFIG_ARM),y)
 libchacha-y += arm/chacha-scalar-core.o
@@ -145,7 +145,7 @@ KASAN_SANITIZE_curve25519-hacl64.o := n
 endif
 
 ifeq ($(CONFIG_CRYPTO_LIB_CURVE25519_ARCH),y)
-CFLAGS_curve25519.o += -I$(src)/$(SRCARCH)
+CFLAGS_curve25519.o += -I$(src)/$(or $(LINSRCARCH),$(SRCARCH))
 libcurve25519-$(CONFIG_ARM) += arm/curve25519-core.o
 libcurve25519-$(CONFIG_PPC) += powerpc/curve25519-ppc64le_asm.o
 endif
@@ -160,7 +160,7 @@ libdes-y					:= des.o
 obj-$(CONFIG_CRYPTO_LIB_GF128HASH) += libgf128hash.o
 libgf128hash-y := gf128hash.o
 ifeq ($(CONFIG_CRYPTO_LIB_GF128HASH_ARCH),y)
-CFLAGS_gf128hash.o += -I$(src)/$(SRCARCH)
+CFLAGS_gf128hash.o += -I$(src)/$(L4X_SRCARCH)
 libgf128hash-$(CONFIG_ARM) += arm/ghash-neon-core.o
 libgf128hash-$(CONFIG_ARM64) += arm64/ghash-neon-core.o \
 				arm64/polyval-ce-core.o
@@ -215,7 +215,7 @@ libpoly1305-$(CONFIG_CRYPTO_LIB_POLY1305_GENERIC) += poly1305-donna32.o
 endif
 
 ifeq ($(CONFIG_CRYPTO_LIB_POLY1305_ARCH),y)
-CFLAGS_poly1305.o += -I$(src)/$(SRCARCH)
+CFLAGS_poly1305.o += -I$(src)/$(or $(LINSRCARCH),$(SRCARCH))
 
 ifeq ($(CONFIG_ARM),y)
 libpoly1305-y += arm/poly1305-core.o
@@ -280,7 +280,7 @@ clean-files += arm/poly1305-core.S \
 obj-$(CONFIG_CRYPTO_LIB_SHA1) += libsha1.o
 libsha1-y := sha1.o
 ifeq ($(CONFIG_CRYPTO_LIB_SHA1_ARCH),y)
-CFLAGS_sha1.o += -I$(src)/$(SRCARCH)
+CFLAGS_sha1.o += -I$(src)/$(L4X_SRCARCH)
 ifeq ($(CONFIG_ARM),y)
 libsha1-y += arm/sha1-armv4-large.o
 libsha1-$(CONFIG_KERNEL_MODE_NEON) += arm/sha1-armv7-neon.o \
@@ -302,7 +302,7 @@ endif # CONFIG_CRYPTO_LIB_SHA1_ARCH
 obj-$(CONFIG_CRYPTO_LIB_SHA256) += libsha256.o
 libsha256-y := sha256.o
 ifeq ($(CONFIG_CRYPTO_LIB_SHA256_ARCH),y)
-CFLAGS_sha256.o += -I$(src)/$(SRCARCH)
+CFLAGS_sha256.o += -I$(src)/$(L4X_SRCARCH)
 
 ifeq ($(CONFIG_ARM),y)
 libsha256-y += arm/sha256-ce.o arm/sha256-core.o
@@ -331,7 +331,7 @@ endif # CONFIG_CRYPTO_LIB_SHA256_ARCH
 obj-$(CONFIG_CRYPTO_LIB_SHA512) += libsha512.o
 libsha512-y := sha512.o
 ifeq ($(CONFIG_CRYPTO_LIB_SHA512_ARCH),y)
-CFLAGS_sha512.o += -I$(src)/$(SRCARCH)
+CFLAGS_sha512.o += -I$(src)/$(L4X_SRCARCH)
 
 ifeq ($(CONFIG_ARM),y)
 libsha512-y += arm/sha512-core.o
@@ -359,7 +359,7 @@ obj-$(CONFIG_CRYPTO_LIB_SHA3) += libsha3.o
 libsha3-y := sha3.o
 
 ifeq ($(CONFIG_CRYPTO_LIB_SHA3_ARCH),y)
-CFLAGS_sha3.o += -I$(src)/$(SRCARCH)
+CFLAGS_sha3.o += -I$(src)/$(L4X_SRCARCH)
 libsha3-$(CONFIG_ARM64) += arm64/sha3-ce-core.o
 endif # CONFIG_CRYPTO_LIB_SHA3_ARCH
 

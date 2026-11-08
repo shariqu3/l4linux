@@ -14,6 +14,9 @@ PHONY := all
 all:
 
 src := $(srctree)/$(subst /generated,,$(obj))
+ifeq ($(ARCH),l4)
+src := $(subst arch/l4,arch/$(LINSRCARCH),$(src))
+endif
 
 syscall_abis_32  += common,32
 syscall_abis_64  += common,64

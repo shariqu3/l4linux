@@ -1690,7 +1690,11 @@ static void * __init memblock_alloc_internal(
 	if (!alloc)
 		return NULL;
 
+#ifdef CONFIG_L4
+	return __va(alloc);
+#else /* L4 */
 	return phys_to_virt(alloc);
+#endif /* L4 */
 }
 
 /**

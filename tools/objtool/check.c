@@ -3414,6 +3414,11 @@ static bool insn_cfi_match(struct instruction *insn, struct cfi_state *cfi2)
 
 static inline bool func_uaccess_safe(struct symbol *func)
 {
+	/* L4 doesn't use SMAP and its user accessors are validated separately;
+	 * don't apply the UACCESS-safe function rules. */
+	if (opts.l4)
+		return false;
+
 	if (func)
 		return func->uaccess_safe;
 
@@ -3823,7 +3828,7 @@ static int validate_insn(struct objtool_file *file, struct symbol *func,
 
 	case INSN_SYSCALL:
 		TRACE_INSN(insn, "syscall");
-		if (func && (!next_insn || !next_insn->hint)) {
+		if (!opts.l4 && func && (!next_insn || !next_insn->hint)) {
 			WARN_INSN(insn, "unsupported instruction in callable function");
 			return 1;
 		}
@@ -3832,7 +3837,7 @@ static int validate_insn(struct objtool_file *file, struct symbol *func,
 
 	case INSN_SYSRET:
 		TRACE_INSN(insn, "sysret");
-		if (func && (!next_insn || !next_insn->hint)) {
+		if (!opts.l4 && func && (!next_insn || !next_insn->hint)) {
 			WARN_INSN(insn, "unsupported instruction in callable function");
 			return 1;
 		}
@@ -3841,7 +3846,7 @@ static int validate_insn(struct objtool_file *file, struct symbol *func,
 
 	case INSN_STAC:
 		TRACE_INSN(insn, "stac");
-		if (!opts.uaccess)
+		if (!opts.uaccess || opts.l4)
 			break;
 
 		if (statep->uaccess) {
@@ -3854,7 +3859,7 @@ static int validate_insn(struct objtool_file *file, struct symbol *func,
 
 	case INSN_CLAC:
 		TRACE_INSN(insn, "clac");
-		if (!opts.uaccess)
+		if (!opts.uaccess || opts.l4)
 			break;
 
 		if (!statep->uaccess && func) {
@@ -4375,7 +4380,7 @@ static int validate_symbol(struct objtool_file *file, struct section *sec,
 	if (!insn || insn->visited)
 		return 0;
 
-	if (opts.uaccess)
+	if (opts.uaccess && !opts.l4)
 		state->uaccess = sym->uaccess_safe;
 
 	func = insn_func(insn);
@@ -4572,6 +4577,11 @@ static int validate_ibt_insn(struct objtool_file *file, struct instruction *insn
 	     reloc = find_reloc_by_dest_range(file->elf, insn->sec,
 					      reloc_offset(reloc) + 1,
 					      (insn->offset + insn->len) - (reloc_offset(reloc) + 1))) {
+
+		/* Code range markers (e.g. __irqentry_text_start) are not
+		 * indirect branch targets. */
+		if (opts.l4 && reloc->sym->type == STT_NOTYPE)
+			continue;
 
 		off = reloc->sym->offset + arch_insn_adjusted_addend(insn, reloc);
 

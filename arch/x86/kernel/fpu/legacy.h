@@ -4,6 +4,10 @@
 
 #include <asm/fpu/types.h>
 
+#ifdef CONFIG_L4
+#include <asm/generic/futex-helper.h>
+#endif /* L4 */
+
 extern unsigned int mxcsr_feature_mask;
 
 static inline void ldmxcsr(u32 mxcsr)
@@ -15,6 +19,29 @@ static inline void ldmxcsr(u32 mxcsr)
  * Returns 0 on success or the trap number when the operation raises an
  * exception.
  */
+#ifdef CONFIG_L4
+/* Luckily, the argument is always called 'fx' */
+#define user_insn(insn, output, input...)				\
+({									\
+	int err;							\
+	unsigned long flags;						\
+									\
+	might_fault();							\
+									\
+	fx = (typeof(fx))l4x_futex_translate_uaddr_nocheck((void __user *)fx, &flags); \
+									\
+	asm volatile(ASM_STAC "\n"					\
+		     "1: " #insn "\n"					\
+		     "2: " ASM_CLAC "\n"				\
+		     _ASM_EXTABLE_TYPE(1b, 2b, EX_TYPE_FAULT_MCE_SAFE)	\
+		     : [err] "=a" (err), output				\
+		     : "0"(0), input);					\
+									\
+	l4x_futex_translate_uaddr_end(flags);				\
+									\
+	err;								\
+})
+#else  /* L4 */
 #define user_insn(insn, output, input...)				\
 ({									\
 	int err;							\
@@ -29,6 +56,7 @@ static inline void ldmxcsr(u32 mxcsr)
 		     : "0"(0), input);					\
 	err;								\
 })
+#endif /* L4 */
 
 #define kernel_insn_err(insn, output, input...)				\
 ({									\

@@ -86,6 +86,7 @@ quiet_cmd_vmlinux_objs = GEN     $@
 	for f in $(real-prereqs); do	\
 		case $${f} in		\
 		*libgcc.a) ;;		\
+		$(L4OBJ)/*) ;;		\
 		*) $(AR) t $${f} ;;	\
 		esac			\
 	done > $@

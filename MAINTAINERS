@@ -14585,6 +14585,21 @@ S:	Maintained
 F:	include/net/l3mdev.h
 F:	net/l3mdev
 
+L4 PORT
+M:	Adam Lackorzynski <adam@l4re.org>
+L:	l4-hackers@os.inf.tu-dresden.de
+W:	https://l4linux.org/
+S:	Maintained
+F:	arch/l4/
+F:	drivers/video/l4*
+F:	drivers/net/l4*
+F:	drivers/block/l4*
+F:	drivers/char/tpm/tpm_l4stpm.c
+F:	drivers/char/l4cdds.c
+F:	drivers/input/l4*
+F:	drivers/tty/serial/l4*
+F:	drivers/gpio/l4gpio.c
+
 LANDLOCK SECURITY MODULE
 M:	Mickaël Salaün <mic@digikod.net>
 R:	Günther Noack <gnoack@google.com>

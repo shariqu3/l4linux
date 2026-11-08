@@ -113,6 +113,10 @@ obj-$(CONFIG_FB_MB862XX)	  += mb862xx/
 obj-$(CONFIG_FB_OPENCORES)	  += ocfb.o
 obj-$(CONFIG_FB_SM712)		  += sm712fb.o
 
+obj-$(CONFIG_L4_FB_DRIVER)        += l4fb.o
+obj-$(CONFIG_L4_FB_DRIVER_XF86IF) += l4fb_xf86if.o
+obj-$(CONFIG_L4_SERVER_FB)        += l4fb-srv.o
+
 # Platform or fallback drivers go here
 obj-$(CONFIG_FB_UVESA)            += uvesafb.o
 obj-$(CONFIG_FB_VESA)             += vesafb.o

@@ -2187,6 +2187,12 @@ int kvm_get_dirty_log(struct kvm *kvm, struct kvm_dirty_log *log,
 	for (i = 0; !any && i < n/sizeof(long); ++i)
 		any = (*memslot)->dirty_bitmap[i];
 
+#ifdef CONFIG_L4
+	// TODO
+	// mark whole slot dirty 
+	memset((*memslot)->dirty_bitmap, 0xff, n);
+#endif /* L4 */
+	
 	if (copy_to_user(log->dirty_bitmap, (*memslot)->dirty_bitmap, n))
 		return -EFAULT;
 
@@ -3492,7 +3498,11 @@ EXPORT_SYMBOL_FOR_KVM_INTERNAL(kvm_read_guest_cached);
 
 int kvm_clear_guest(struct kvm *kvm, gpa_t gpa, unsigned long len)
 {
+#ifdef CONFIG_L4
+	const void *zero_page = (const void *)empty_zero_page;
+#else
 	const void *zero_page = (const void *) __va(page_to_phys(ZERO_PAGE(0)));
+#endif /* L4 */
 	gfn_t gfn = gpa >> PAGE_SHIFT;
 	int seg;
 	int offset = offset_in_page(gpa);

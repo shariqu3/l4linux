@@ -11,7 +11,7 @@ xor-y				+= xor-8regs-prefetch.o
 xor-y				+= xor-32regs-prefetch.o
 
 ifeq ($(CONFIG_XOR_BLOCKS_ARCH),y)
-CFLAGS_xor-core.o		+= -I$(src)/$(SRCARCH)
+CFLAGS_xor-core.o		+= -I$(src)/$(L4X_SRCARCH)
 endif
 
 xor-$(CONFIG_ALPHA)		+= alpha/xor.o
