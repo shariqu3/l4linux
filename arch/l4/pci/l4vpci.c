@@ -219,6 +219,19 @@ unsigned int pcibios_assign_all_busses(void)
 {
 	return 1;
 }
+
+/* From arch/x86/pci/common.c, which is not built with L4_VPCI: give the
+ * device its MSI domain, otherwise MSI/MSI-X cannot be enabled. */
+int pcibios_device_add(struct pci_dev *dev)
+{
+	struct irq_domain *msidom;
+
+	msidom = dev_get_msi_domain(&dev->bus->dev);
+	if (!msidom)
+		msidom = x86_pci_msi_default_domain;
+	dev_set_msi_domain(&dev->dev, msidom);
+	return 0;
+}
 #endif
 
 int pcibios_enable_device(struct pci_dev *dev, int bars)

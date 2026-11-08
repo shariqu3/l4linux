@@ -303,6 +303,11 @@ struct irq_domain * __init native_create_pci_msi_domain(void)
 		return NULL;
 
 #ifdef CONFIG_L4
+	/* Like the native vector domain: without these, the PCI/MSI core
+	 * never creates per-device MSI domains and x86_init_dev_msi_info()
+	 * (with the L4 hooks) is never reached. */
+	l4x_irq_domain->flags |= IRQ_DOMAIN_FLAG_MSI_PARENT;
+	l4x_irq_domain->msi_parent_ops = &x86_vector_msi_parent_ops;
 	return l4x_irq_domain;
 #else /* L4 */
 	x86_vector_domain->flags |= IRQ_DOMAIN_FLAG_MSI_PARENT;

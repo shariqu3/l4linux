@@ -84,6 +84,17 @@ void l4x_compose_msi_msg(struct irq_data *data, struct msi_msg *msg)
 		return;
 	}
 
+	if (!cfg) {
+		/* No x86 vector domain below us (l4x_irq_domain has no
+		 * irq_cfg): use the complete message Fiasco computed, which
+		 * already targets the CPU it wants the MSI on. */
+		msg->address_lo = msiinfo.msi_addr & 0xffffffff;
+		msg->address_hi = msiinfo.msi_addr >> 32;
+		msg->data       = msiinfo.msi_data;
+
+		return;
+	}
+
 	msg->address_hi = X86_MSI_BASE_ADDRESS_HIGH;
 	msg->arch_addr_hi.destid_8_31 = cfg->dest_apicid >> 8;
 	msg->arch_addr_lo.destid_0_7 = cfg->dest_apicid & 0xFF;
